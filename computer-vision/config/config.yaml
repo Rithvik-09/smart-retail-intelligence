@@ -1,0 +1,84 @@
+# Smart Retail Intelligence - Computer Vision Pipeline Configuration
+
+store:
+  id: 1
+
+camera:
+  id: "CAM-01"
+  source: 0 # 0 for default webcam, or path to video file
+  width: 1280
+  height: 720
+  fps: 30
+
+model:
+  path: "yolov8n.pt"
+  confidence: 0.45
+  device: "auto" # "auto", "cpu", "cuda"
+  imgsz: 640
+
+tracker:
+  tracker_type: "bytetrack.yaml" # ultralytics built-in tracker configuration
+
+backend:
+  baseUrl: "http://localhost:8080"
+  shopper_endpoint: "/api/v1/ingestion/shopper"
+  queue_endpoint: "/api/v1/ingestion/queue"
+  timeout_seconds: 3.0
+  retry_attempts: 2
+  buffer_size: 100
+  emit_interval_seconds: 2.0 # send event every N seconds
+
+line_crossing:
+  enabled: true
+  line:
+    - [100, 360]
+    - [1180, 360]
+  entry_direction: "down" # "down" (y increases) or "up" (y decreases)
+
+zones:
+  - id: 1
+    name: "Entrance"
+    polygon:
+      - [50, 50]
+      - [500, 50]
+      - [500, 350]
+      - [50, 350]
+  - id: 2
+    name: "Electronics"
+    polygon:
+      - [550, 50]
+      - [1220, 50]
+      - [1220, 350]
+      - [550, 350]
+
+checkout:
+  counters:
+    - id: 1
+      name: "Counter 1"
+      averageServiceTimeMinutes: 1.0
+      polygon:
+        - [100, 420]
+        - [450, 420]
+        - [450, 680]
+        - [100, 680]
+    - id: 2
+      name: "Counter 2"
+      averageServiceTimeMinutes: 1.2
+      polygon:
+        - [500, 420]
+        - [850, 420]
+        - [850, 680]
+        - [500, 680]
+    - id: 3
+      name: "Counter 3"
+      averageServiceTimeMinutes: 1.2
+      polygon:
+        - [900, 420]
+        - [1250, 420]
+        - [1250, 680]
+        - [900, 680]
+
+crowd:
+  low: 5
+  medium: 10
+  high: 20
